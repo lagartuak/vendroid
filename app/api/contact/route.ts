@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -9,17 +9,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
     return NextResponse.json({ error: 'Envío no configurado' }, { status: 500 });
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
 
   try {
-    await resend.emails.send({
-      from: 'VENDROID <noreply@send.vendroid.es>',
+    await transporter.sendMail({
+      from: `VENDROID <${process.env.SMTP_USER}>`,
       to: 'info@vendroid.es',
-      reply_to: email,
+      replyTo: email,
       subject: `Nueva consulta VENDROID de ${nombre}`,
       text: `Nombre: ${nombre}
 Empresa: ${empresa || '-'}

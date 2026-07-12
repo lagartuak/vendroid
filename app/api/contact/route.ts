@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: 'VENDROID <noreply@send.vendroid.es>',
       to: 'info@vendroid.es',
-      replyTo: email,
+      reply_to: email,
       subject: `Nueva consulta VENDROID de ${nombre}`,
       text: `Nombre: ${nombre}
 Empresa: ${empresa || '-'}

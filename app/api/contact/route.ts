@@ -13,6 +13,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Envío no configurado' }, { status: 500 });
   }
 
+  const pass = process.env.SMTP_PASS;
+  console.error('DEBUG SMTP_HOST:', JSON.stringify(process.env.SMTP_HOST));
+  console.error('DEBUG SMTP_PORT:', JSON.stringify(process.env.SMTP_PORT));
+  console.error('DEBUG SMTP_USER:', JSON.stringify(process.env.SMTP_USER));
+  console.error(
+    'DEBUG SMTP_PASS length:',
+    pass.length,
+    'first code:',
+    pass.charCodeAt(0),
+    'last code:',
+    pass.charCodeAt(pass.length - 1)
+  );
+
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT || 465),

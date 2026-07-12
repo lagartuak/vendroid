@@ -40,6 +40,7 @@ ${mensaje || '-'}`,
     });
     return NextResponse.json({ ok: true });
   } catch (e) {
+    console.error('SMTP send error:', e);
     return NextResponse.json({ error: 'Error enviando el email' }, { status: 500 });
   }
 }
